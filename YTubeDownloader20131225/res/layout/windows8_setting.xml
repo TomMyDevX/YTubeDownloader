@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/windows8_root_setting_layout"
+    android:orientation="vertical" >
+    
+<ScrollView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:scrollbars="none"
+                        android:id="@+id/scrollView">
+
+                    <LinearLayout
+                        android:id="@+id/setting_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+
+                    
+                        android:orientation="vertical"
+                        android:visibility="visible" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                  
+                            android:paddingBottom="15dp"
+                            android:paddingTop="15dp" >
+
+                            <TextView
+                                android:id="@+id/windows8_setting_theme_label"
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="0.5"
+                                android:gravity="center|left"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true"
+                                android:text="Theme : "
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/change_theme"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:background="#55000000"
+                         	android:padding="2dp"
+                          >
+
+                            <TextView
+                                android:id="@+id/windows8_setting_change_bg_color_label"
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1"
+                                android:gravity="center|left"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true"
+                                android:text="Backgroud Color"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textStyle="bold" />
+								<Button
+                                android:id="@+id/change_bg_color"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.25"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:background="#55000000"
+                            android:padding="2dp" >
+
+                            <TextView
+                                android:id="@+id/windows8_setting_change_text_color_label"
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1"
+                                android:gravity="center|left"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true"
+                                android:text="Text Color"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/change_text_color"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.25" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                  
+                                android:paddingTop="15dp"
+                                android:paddingBottom="15dp"
+                                >
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Max Limit"
+                                    android:id="@+id/windows8_setting_maxlimits_label"
+                                    android:gravity="center|left"
+                                    android:layout_weight="0.5"
+                                    android:textStyle="bold"
+                                    android:paddingLeft="10dp"
+                                    android:singleLine="true"/>
+
+                            <SeekBar
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/seekBar"
+                                    android:layout_weight="1"
+                                    android:max="49"
+                                    android:progressDrawable="@drawable/progressbar"
+                                    android:longClickable="false"
+                                    android:layout_marginRight="10dp"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="15"
+                                    android:id="@+id/seek_text_var"
+                                    android:singleLine="true"
+                                    android:paddingRight="10dp"
+                                    android:visibility="gone"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:id="@+id/linearLayout"
+                                android:visibility="gone">
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Thumbnail"
+                                    android:id="@+id/textView2"
+                                    android:gravity="center|left"
+                                    android:layout_weight="0.5"
+                                    android:textStyle="bold"
+                                    android:paddingLeft="10dp"/>
+
+                            <CheckBox
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Show"
+                                    android:id="@+id/show_thumb"
+                                    android:layout_weight="1"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent" android:orientation="horizontal"
+                                android:id="@+id/linearLayout2"
+                                android:visibility="visible">
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Download Quality"
+                                    android:id="@+id/windows8_setting_dwquality_label"
+                                    android:gravity="center|left"
+                                    android:layout_weight="1"
+                                    android:textStyle="bold"
+                                    android:paddingLeft="10dp"
+                                    android:singleLine="true"/>
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="fill_parent"
+                                    android:id="@+id/text_location"
+                                    android:layout_weight="1"
+                                    android:paddingRight="10dp"
+                                    android:singleLine="true"
+                                    android:visibility="gone"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:paddingBottom="15dp">
+
+                            <RadioGroup
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:paddingLeft="15dp">
+                                <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Full HD Quality"
+                                        android:id="@+id/radioButton_fhq"/>
+
+                                <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="HD Quality"
+                                        android:id="@+id/radioButton_hq"/>
+
+                                <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Medium Quality"
+                                        android:id="@+id/radioButton_mq"/>
+
+                                <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Low Quality"
+                                        android:id="@+id/radioButton_lq"/>
+                            </RadioGroup>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceSmall"
+                                    android:text="* Video quality was order by choose. "
+                                    android:id="@+id/windows8_setting_dwquality_detail_label"
+                                    android:textSize="8dp"
+                                    android:paddingLeft="15dp"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                        
+                            android:paddingTop="10dp"
+                            android:paddingBottom="5dp"
+                            android:id="@+id/linearLayout3">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Save To : "
+                                android:id="@+id/windows8_setting_saveto_label"
+                                android:gravity="center|left"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Medium Text"
+                                android:id="@+id/disk_save_location"
+                                android:layout_weight="0.5"
+                                android:gravity="center_vertical" />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Edit"
+                                android:id="@+id/button_edit_disk_save_location"
+                                android:layout_marginRight="10dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                      
+                            android:paddingBottom="5dp"
+                            android:id="@+id/linearLayout4" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Save Video With ID : "
+                                android:id="@+id/windows8_setting_savewithid_label"
+                                android:gravity="center|left"
+                                android:textStyle="bold"
+                                
+                                android:paddingLeft="10dp"
+                                android:singleLine="true" />
+
+                            <CheckBox
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/checkBox_save_video_with_id" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Medium Text"
+                                android:id="@+id/textView7"
+                                android:layout_weight="0.5"
+                                android:gravity="center_vertical"
+                                android:visibility="gone" />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Edit"
+                                android:id="@+id/button"
+                                android:layout_marginRight="10dp"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                     
+                            android:paddingBottom="15dp"
+                            android:visibility="gone"
+                            android:id="@+id/linearLayout5" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Disable Change Log : "
+                                android:id="@+id/textView8"
+                                android:gravity="center|left"
+                                android:textStyle="bold"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true" />
+
+                            <CheckBox
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/checkBox_change_log_show" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Medium Text"
+                                android:id="@+id/textView9"
+                                android:layout_weight="0.5"
+                                android:gravity="center_vertical"
+                                android:visibility="gone" />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Edit"
+                                android:id="@+id/button2"
+                                android:layout_marginRight="10dp"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/LinearLayout01"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                       
+                            android:paddingBottom="15dp" >
+
+                            <TextView
+                                android:id="@+id/windows8_setting_dwwithservices_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:gravity="center|left"
+                                android:paddingLeft="10dp"
+                                android:singleLine="true"
+                                android:text="Download with Service :"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textStyle="bold" />
+
+                            <CheckBox
+                                android:id="@+id/checkBox_download_with_service"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:id="@+id/TextView02"
+                                android:layout_width="0dp"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="0.5"
+                                android:gravity="center_vertical"
+                                android:text="Medium Text"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:visibility="gone" />
+
+                            <Button
+                                android:id="@+id/Button01"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:text="Edit"
+                                android:visibility="invisible" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </ScrollView>
+</LinearLayout>

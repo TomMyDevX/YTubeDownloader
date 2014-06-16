@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="windows8_color_black_white_bg">#000000</color>
+    <color name="windows8_color_black_white_buttom_layout_bg">#000000</color>
+    
+    
+    
+    <color name="windows8_color_black_white_text_color">#FFFFFF</color>
+</resources>

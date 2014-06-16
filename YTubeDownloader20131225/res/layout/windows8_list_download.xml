@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Title : "
+        android:id="@+id/textView_title"
+        android:layout_gravity="left|center_vertical"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:layout_marginTop="0dp"
+        android:layout_alignParentLeft="true"
+        android:padding="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Status : "
+        android:textStyle="bold"
+        android:id="@+id/textView"
+        android:layout_gravity="left|center_vertical"
+        android:layout_below="@+id/textView_title"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp" />
+
+    <TextView
+  		android:ellipsize="marquee"
+        android:gravity="left"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:marqueeRepeatLimit ="marquee_forever"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/dw_title"
+        android:layout_toRightOf="@+id/textView_title"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/textView"
+        android:padding="5dp"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/dw_status"
+        android:layout_below="@+id/dw_title"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        />
+</RelativeLayout>

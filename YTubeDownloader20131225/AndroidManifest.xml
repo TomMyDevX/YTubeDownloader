@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tools.tommydev.videofinder"
+    android:versionCode="68"
+    android:versionName="3.0.8" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:name="com.tools.tommydev.videofinder.AppicationX"
+        android:allowBackup="false"
+        android:allowClearUserData="false"
+        android:debuggable="false"
+        android:icon="@drawable/iconytube"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/noAnimTheme" >
+        <activity
+            android:name="com.tools.tommydev.videofinder.Home"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tools.tommydev.videofinder.Webview_Detecter"
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" />
+
+        <service android:name="com.tools.tommydev.videofinder.Test_Downloader_By_service" />
+
+        <receiver android:name="com.tools.tommydev.videofinder.Cancel_Downlaoding" />
+        <receiver android:name="com.tools.tommydev.videofinder.WebView_Boardcast" />
+
+        <activity
+            android:name="com.inmobi.androidsdk.IMBrowserActivity"
+            android:configChanges="keyboardHidden|orientation|keyboard" />
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.Windows8_home"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.Windows8_Setting_Activity"
+            android:label="@string/title_activity_windows8__setting_"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.Windows8_Login_Activity"
+            android:label="@string/title_activity_windows8__login"
+            android:screenOrientation="portrait" >
+        </activity>
+
+    
+
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.Windows8_finder"
+            android:label="@string/title_activity_windows8_finder"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.Windows8_bookmark_activity"
+            android:label="@string/title_activity_windows8_bookmark_activity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.Windows8_download"
+            android:label="@string/title_activity_windows8_download"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.tools.tommydev.videofinder.themewin8.windows8_download_fm"
+            android:label="@string/title_activity_windows8_download"
+            android:screenOrientation="portrait" >
+        </activity>
+
+           <activity
+            android:name="com.tools.tommydev.videofinder.Webview_new_detector"
+            android:label="@string/title_activity_login_"
+            android:screenOrientation="portrait" >
+        </activity>
+
+
+
+
+        <activity
+            android:name="com.tools.tommydev.videofinder.Create_Acc_Acitivty"
+            android:label="@string/title_activity_create__acc__acitivty" >
+        </activity>
+        
+  
+    </application>
+
+</manifest>

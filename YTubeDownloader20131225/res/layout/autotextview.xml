@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@android:id/text1"
+          android:textAppearance="?android:attr/textAppearanceLargeInverse"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="?android:attr/listPreferredItemHeight"
+          android:ellipsize="marquee"
+          android:textColor="#FFFFFF"
+          android:gravity="left|center"
+          android:paddingLeft="15dp"
+
+          android:background="@drawable/top_bar_bg"
+        />

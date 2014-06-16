@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="right_size_w_cancel">50dp</dimen>
+     <dimen name="right_size_h_cancel">50dp</dimen>
+    
+    <dimen name="right_size_w">50dp</dimen>
+     <dimen name="right_size_h">80dp</dimen>
+       <dimen name="pane_size">300dp</dimen>
+</resources>

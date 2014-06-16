@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+         android:background="@drawable/top_bar_bg"
+        android:layout_height="wrap_content" >
+
+        <AutoCompleteTextView
+            android:id="@+id/editText_Src"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/top_bar_bg"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#FFFFFF" >
+
+            <requestFocus />
+        </AutoCompleteTextView>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="@dimen/right_size_w_cancel"
+            android:layout_height="@dimen/right_size_h_cancel"
+    
+            android:src="@drawable/navigation_cancel" />
+
+    </LinearLayout>
+
+<ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="3dp"
+            android:indeterminate="true" android:visibility="gone"
+            android:id="@+id/progressBar2"/>
+
+    <ListView
+                        android:layout_height="wrap_content"
+                        android:layout_width="fill_parent"
+                        android:background="#00FFFFFF"
+                        android:id="@+id/listviewx"
+                        android:layout_weight="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"/>
+
+
+</LinearLayout>

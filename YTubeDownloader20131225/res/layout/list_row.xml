@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/top_bar_bg"
+    android:layout_height="match_parent">
+
+
+<RelativeLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+             	android:background="#cc000000"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+    <!--  ListRow Left sied Thumbnail image -->
+    <LinearLayout android:id="@+id/thumbnail"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:padding="3dip"
+                  android:layout_alignParentLeft="true"
+                  android:background="@drawable/image_bg"
+                  android:clickable="false"
+                  android:layout_marginRight="5dip">
+
+        <ImageView
+                android:id="@+id/list_image"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:src="@drawable/image_bg"
+                android:clickable="false"
+                android:scaleType="centerCrop"/>
+
+    </LinearLayout>
+
+    <!-- Title Of Song-->
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/thumbnail"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:text="Rihanna Love the way lie"
+            android:textColor="#FFFFFF"
+            android:typeface="sans"
+            android:textSize="15dip"
+            android:singleLine="true"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+           android:clickable="false"/>
+
+    <!-- Artist Name -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_ready2play"
+            android:layout_toRightOf="@+id/duration"
+            android:layout_alignBottom="@+id/duration"
+            android:textColor="#10bcc9"
+            android:gravity="center_vertical"
+            android:paddingLeft="30dp"
+            android:textSize="10dip"
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/duration"
+            android:clickable="false"/>
+
+
+    <TextView
+            android:id="@+id/artist"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:textColor="#343434"
+            android:textSize="10dip"  android:singleLine="true"
+            android:layout_marginTop="1dip"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:text=""
+            android:layout_toLeftOf="@+id/duration"/>
+
+    <!-- Rightend Duration -->
+    <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center|right"
+            android:text="5:45"
+            android:textSize="10dip"
+            android:textColor="#10bcc9"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:layout_alignBottom="@+id/thumbnail"
+            android:layout_alignTop="@+id/artist"
+           android:clickable="false"/>
+
+    <!-- Rightend Arrow -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_favor"
+            android:layout_alignBottom="@+id/textView_ready2play"
+            android:layout_toRightOf="@+id/textView_ready2play"
+            android:layout_alignTop="@+id/textView_ready2play"
+            android:gravity="center"
+            android:textColor="#10bcc9"
+            android:paddingLeft="30dp"
+            android:textSize="10dip"
+            android:clickable="false"
+            android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/setting_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/title"
+        android:clickable="true"
+        android:paddingRight="5dp"
+        android:src="@drawable/ic_action_overflow"
+        android:visibility="gone" />
+
+</RelativeLayout>
+
+<LinearLayout
+    android:id="@+id/layout_item_setting"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#cc000000"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:visibility="visible" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="70dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/imageView_item_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:src="@drawable/navigation_cancel" />
+
+        <TextView
+            android:id="@+id/textView_item_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Cancel"
+            android:textColor="#FFF"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="70dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/imageView_favor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:src="@drawable/rating_not_important" />
+
+        <TextView
+            android:id="@+id/textView_favorx"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Favorite"
+            android:textColor="#FFF"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="70dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/imageView_item_preview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:src="@drawable/av_play" />
+
+        <TextView
+            android:id="@+id/textView_item_preview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Preview"
+            android:textColor="#FFF"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_save"
+        android:layout_width="70dp"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/imageView_item_download"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:src="@drawable/content_save" />
+
+        <TextView
+            android:id="@+id/textView_item_download"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Queue"
+            android:textColor="#FFF"
+            android:textSize="10dp" />
+    </LinearLayout>
+</LinearLayout>
+
+
+
+</LinearLayout>

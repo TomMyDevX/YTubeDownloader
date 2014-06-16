@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">YTube Downloader</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_windows8_home">Windows8_home</string>
+    <string name="title_activity_windows8__setting_">Windows8_Setting_Activity</string>
+    <string name="title_activity_windows8__login">Windows8_LoginActivity</string>
+    <string name="app_id">156806417848409</string>
+    <string name="title_activity_windows8_finder">Windows8_finder</string>
+    <string name="title_activity_windows8_bookmark_activity">Windows8_bookmark_activity</string>
+    <string name="title_activity_windows8_download">Windows8_download</string>
+    <string name="title_activity_login_">Login_Activity</string>
+    <string name="title_activity_create__acc__acitivty">Create_Acc_Acitivty</string>
+
+</resources>

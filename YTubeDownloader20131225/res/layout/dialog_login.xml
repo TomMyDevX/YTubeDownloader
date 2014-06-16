@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+        <RelativeLayout
+        android:id="@+id/settings_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/settings_titlebar_layout"
+        android:layout_centerHorizontal="true"
+        android:background="#FFF" >
+
+        <LinearLayout
+            android:id="@+id/settings_content_login_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="#FFF"
+            android:orientation="vertical"
+            android:padding="20dp" >
+
+            <TextView
+                android:id="@+id/settings_content_login_title_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:drawableLeft="@drawable/ic_action_bnh_staff_only"
+                android:gravity="left|center_vertical"
+                android:text="   Member Login   "
+                android:layout_margin="5dp"
+                android:textColor="#000"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/green_bg"
+                android:text="TextView" />
+
+            <EditText
+                android:id="@+id/settings_content_login_username_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:background="@drawable/ic_solid_white"
+                android:ems="10"
+                android:hint="username"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/settings_content_login_password_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:background="@drawable/ic_solid_white"
+                android:ems="10"
+                android:hint="password"
+                android:inputType="textPassword" >
+            </EditText>
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_solid_green"
+                android:text="Login"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+			<Button
+			    android:layout_marginTop="5dp"
+                android:id="@+id/button_create_acc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_solid_green"
+                android:text="Create Account"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+               android:layout_margin="15dp"
+                android:layout_height="wrap_content" >
+                		<com.facebook.widget.LoginButton
+					        android:id="@+id/authButton"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_gravity="center_horizontal"
+		
+					        />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

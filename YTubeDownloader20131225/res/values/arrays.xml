@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="colors_array">
+            <!--<item>Move To ..</item>-->
+            <item>Rename To ..</item>
+            <item>Delete</item>
+            <item>Specification</item>
+            <item>Play With</item>
+            <!--<item>Share To ..</item>-->
+        </string-array>
+</resources>

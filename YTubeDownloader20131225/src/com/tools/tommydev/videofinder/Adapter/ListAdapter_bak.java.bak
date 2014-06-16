@@ -1,0 +1,1059 @@
+package com.tools.tommydev.videofinder.Adapter;
+
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.tools.tommydev.videofinder.DataBaseHelper.DBClass;
+import com.tools.tommydev.videofinder.DataBaseHelper.DBClass_favor;
+import com.tools.tommydev.videofinder.Object.Meta;
+import com.tools.tommydev.videofinder.Object.Mp3List;
+import com.tools.tommydev.videofinder.Object.Video;
+import com.tools.tommydev.videofinder.R;
+import com.tools.tommydev.videofinder.UIHelper.AlertUIHelper;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Created by TomMy on 8/5/13.
+ */
+public class ListAdapter_bak extends BaseAdapter {
+    positionList positionList;
+    positionArrList positionListDownlaod;
+    int showpos = -1;
+    long downloadId;
+    ProgressDialog progressDialog2;
+    int count_retry = 0;
+    private long enqueue = 1;
+    private DownloadManager dm;
+    private Activity activity;
+    private ArrayList<Mp3List> data;
+    private LayoutInflater inflater = null;
+    private ProgressDialog mProgressDialog;
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog;
+
+    public ListAdapter_bak(Activity a, ArrayList<Mp3List> d) {
+        progressDialog = new ProgressDialog(a);
+        progressDialog2 = new ProgressDialog(a);
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+
+        activity = a;
+        data = d;
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        positionList = new positionList();
+        positionListDownlaod = new positionArrList();
+
+
+    }
+
+    public int getCount() {
+        return data.size();
+    }
+
+    public Object getItem(int position) {
+        return position;
+    }
+
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //  View vi = convertView;
+        ViewHolder holder = null;// = new ViewHolder();
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.list_row, parent, false);
+            holder = new ViewHolder();
+            holder.title = (TextView) convertView.findViewById(R.id.title); // title
+            holder.artist = (TextView) convertView.findViewById(R.id.artist); // artist name
+            holder.duration = (TextView) convertView.findViewById(R.id.duration); // duration
+            holder.ready2play = (TextView) convertView.findViewById(R.id.textView_ready2play); // ready2play
+            holder.thumb_image = (ImageView) convertView.findViewById(R.id.list_image); // thumb image
+            holder.setting_item = (ImageView) convertView.findViewById(R.id.setting_item);
+            holder.dataLL = (LinearLayout) convertView.findViewById(R.id.layout_item_setting);
+            holder.dataLL_save = (LinearLayout) convertView.findViewById(R.id.linearLayout_save);
+            holder.ImageView_item_cancel = (ImageView) convertView.findViewById(R.id.imageView_item_cancel);
+            holder.ImageView_item_preview = (ImageView) convertView.findViewById(R.id.imageView_item_preview);
+            holder.ImageView_item_download = (ImageView) convertView.findViewById(R.id.imageView_item_download);
+            holder.ImageView_item_favor = (ImageView) convertView.findViewById(R.id.imageView_favor);
+            holder.item_favor = (TextView) convertView.findViewById(R.id.textView_favor); // title
+            //  convertView.setTag(holder);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+
+        int hours = data.get(position).getDuration() / 3600;
+        int minutes = (data.get(position).getDuration() % 3600) / 60;
+        int seconds = data.get(position).getDuration() % 60;
+        String timeString = hours + ":" + minutes + ":" + seconds;
+        holder.title.setText(data.get(position).getTitle());
+        holder.duration.setText(timeString);
+        SharedPreferences settings = activity.getSharedPreferences("Youtube_downloader_tommy", 0);
+        boolean show_thumb = settings.getBoolean("show_thumb", true);
+
+        // Log.e("Images",data.get(position).getThumbnail());
+        final int finalx = position;
+
+
+        ImageLoader.getInstance().displayImage(data.get(position).getThumbnail(), holder.thumb_image);
+
+
+        //   holder.thumb_image.setImageURI(Uri.parse(Environment.getExternalStorageDirectory() + "/Android/data/"+activity.getClass().getPackage().getName()+"/images/"+data.get(position).getId()));
+//
+        //  imageLoader.DisplayImage(data.get(position).getSmall_thumbnail(), holder.thumb_image);
+
+        final ViewHolder finalHolder = holder;
+        holder.setting_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showpos = finalx;
+                positionList.addPostion(finalx);
+                Animation animation;
+                animation = AnimationUtils.loadAnimation(activity, R.anim.right_to_left);
+                finalHolder.dataLL.clearAnimation();
+                finalHolder.dataLL.startAnimation(animation);
+                finalHolder.dataLL.setVisibility(View.VISIBLE);
+                DBClass_favor dbClass_favor = new DBClass_favor(activity);
+                String[] strings = dbClass_favor.SelectData(data.get(finalx).getId());
+                if (strings != null) {
+                    finalHolder.ImageView_item_favor.setImageResource(R.drawable.rating_important);
+                } else {
+                    finalHolder.ImageView_item_favor.setImageResource(R.drawable.rating_not_important);
+                }
+
+            }
+        });
+//
+        final ViewHolder finalHolder1 = holder;
+        holder.ImageView_item_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                positionList.removePosition(finalx);
+                Animation animation;
+                animation = AnimationUtils.loadAnimation(activity, R.anim.left_to_right);
+                finalHolder1.dataLL.clearAnimation();
+                finalHolder1.dataLL.startAnimation(animation);
+                finalHolder1.dataLL.setVisibility(View.GONE);
+
+
+            }
+        });
+////
+        holder.ImageView_item_preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBClass dbClass = new DBClass(activity);
+                String s[] = dbClass.SelectDataWithNameArray(data.get(finalx).getTitle().replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + ".mp4");
+                boolean x = dbClass.SelectDataWithName(data.get(finalx).getTitle().replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + ".mp4");
+
+                String path = Environment.getExternalStorageDirectory().toString() + "/download/" + data.get(finalx).getTitle().replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + ".mp4";
+                File f = new File(path);
+                if (f.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(path));
+                    intent.setDataAndType(Uri.parse(path), "video/*");
+                    activity.startActivity(intent);
+                } else {
+                    activity.startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + data.get(finalx).getId())), 999);
+
+
+//                    if(isPackageExists("com.google.android.youtube")){
+//                        if(YouTubeApiServiceUtil.isYouTubeApiServiceAvailable(activity).equals(YouTubeInitializationResult.SUCCESS)){
+//                            Intent intent = YouTubeStandalonePlayer.createVideoIntent(activity, "AIzaSyC7KArUd4MH2ExRXgFMYUJfHJ3ADP9vKGw", data.get(finalx).getId(), 0, true, true);
+//                            activity.startActivity(intent);
+//
+//                        }else{
+//                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+data.get(finalx).getId())));
+//                        }
+//                    }else{
+//                        Intent intent = new Intent(Intent.ACTION_VIEW);
+//                        intent.setData(Uri.parse("market://details?id=com.google.android.youtube"));
+//                        activity.startActivity(intent);
+//                    }
+
+                }
+            }
+        });
+////
+////
+        final ViewHolder finalHolder2 = holder;
+        holder.ImageView_item_download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new YouTubePageStreamUriGetter(finalx, finalHolder2.ready2play, finalHolder2.dataLL_save, data.get(finalx).getId()).execute(new String[]{"https://www.youtube.com/watch?v=" + data.get(finalx).getId(), data.get(finalx).getTitle()});
+                Animation animation;
+                animation = AnimationUtils.loadAnimation(activity, R.anim.left_to_right);
+                finalHolder2.dataLL.clearAnimation();
+                finalHolder2.dataLL.startAnimation(animation);
+                finalHolder2.dataLL.setVisibility(View.GONE);
+                positionList.removePosition(finalx);
+                positionListDownlaod.addPostion(finalx, "start_download");
+
+
+            }
+        });
+
+        final ViewHolder finalHolder3 = holder;
+        holder.ImageView_item_favor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBClass_favor dbClass_favor = new DBClass_favor(activity);
+                String[] strings = dbClass_favor.SelectData(data.get(finalx).getId());
+
+                if (strings != null) {
+                    dbClass_favor.DeleteData(data.get(finalx).getId());
+                    finalHolder3.ImageView_item_favor.setImageResource(R.drawable.rating_not_important);
+                    positionList.removePosition(finalx);
+                } else {
+
+                    DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                    Date date = new Date();
+                    dbClass_favor.InsertData(data.get(finalx).getId(), data.get(finalx).getTitle().replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + ".mp4", data.get(finalx).getId(), data.get(finalx).getId(), data.get(finalx).getId(), dateFormat.format(date), data.get(finalx).getThumbnail());
+                    finalHolder3.ImageView_item_favor.setImageResource(R.drawable.rating_important);
+                    positionList.removePosition(finalx);
+                }
+//                //dbClass_favor.getWritableDatabase();
+//              //  if(!dbClass_favor.SelectDataWithNameArray(data.get(finalx).getId())){
+//              //      Log.e("sql","DeleteData");
+//                    finalHolder3.ImageView_item_favor.setImageResource(R.drawable.rating_important);
+//                    dbClass_favor.DeleteData(data.get(finalx).getId());
+//               // }else{
+//                //    Log.e("sql","AddData");
+//                    finalHolder3.ImageView_item_favor.setImageResource(R.drawable.rating_not_important);
+//                    try {
+//                        dbClass_favor.InsertData(data.get(finalx).getId(),data.get(finalx).getId(),data.get(finalx).getId(),data.get(finalx).getId(),data.get(finalx).getId());
+//                    }catch (Exception e){
+//                        dbClass_favor.DeleteData(data.get(finalx).getId());
+//                    }
+
+                //}
+                Animation animation;
+                animation = AnimationUtils.loadAnimation(activity, R.anim.left_to_right);
+                finalHolder2.dataLL.clearAnimation();
+                finalHolder2.dataLL.startAnimation(animation);
+                finalHolder2.dataLL.setVisibility(View.GONE);
+                notifyDataSetChanged();
+
+            }
+        });
+        DBClass_favor dbClass_favor = new DBClass_favor(activity);
+        String[] strings = dbClass_favor.SelectData(data.get(finalx).getId());
+        if (strings != null) {
+            finalHolder3.item_favor.setText("Favorited");
+            finalHolder3.ImageView_item_favor.setImageResource(R.drawable.rating_important);
+        } else {
+            finalHolder3.item_favor.setText("");
+            finalHolder3.ImageView_item_favor.setImageResource(R.drawable.rating_not_important);
+        }
+
+
+        if (positionList.searchPosition(position)) {
+            holder.dataLL.setVisibility(View.VISIBLE);
+
+        } else {
+            holder.dataLL.setVisibility(View.GONE);
+        }
+        if (positionListDownlaod.searchPosition(position)) {
+            holder.ready2play.setVisibility(View.VISIBLE);
+        } else {
+            holder.ready2play.setVisibility(View.GONE);
+        }
+
+
+        DBClass dbClass = new DBClass(activity);
+        boolean s = dbClass.SelectDataWithName(data.get(position).getTitle().replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + ".mp4");
+        String dataarr[] = dbClass.SelectDataWithNameArray(data.get(position).getTitle().replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + ".mp4");
+        //    Log.e("R2P",s+"");
+        if (s) {
+            holder.ready2play.setVisibility(View.VISIBLE);
+            holder.ready2play.setText("Ready to play.");
+            holder.dataLL_save.setVisibility(View.GONE);
+        } else {
+            holder.ready2play.setVisibility(View.GONE);
+            holder.ready2play.setText("");
+            holder.dataLL_save.setVisibility(View.VISIBLE);
+
+        }
+
+
+//       // Log.e("data_sql",">"+s+"|"+position);
+//        if(s){
+//          //  Log.e("R2P","onCheckMySql");
+//
+//            if(dataarr[3].equals("downloaded")){
+//
+//            }else{
+//                holder.ready2play.setText("Downloading...");
+//            }
+//            holder.dataLL_save.setVisibility(View.GONE);
+//        } else {
+//            holder.ready2play.setText("");
+//            holder.dataLL_save.setVisibility(View.VISIBLE);
+//        }
+
+
+        return convertView;
+    }
+
+    public boolean isPackageExists(String targetPackage) {
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+        pm = activity.getPackageManager();
+        packages = pm.getInstalledApplications(0);
+        for (ApplicationInfo packageInfo : packages) {
+            if (packageInfo.packageName.equals(targetPackage)) return true;
+        }
+        return false;
+    }
+
+    public boolean isActivityAvailable(Context context, String packageName, String className) {
+        final PackageManager packageManager = context.getPackageManager();
+        final Intent intent = new Intent();
+        intent.setClassName(packageName, className);
+
+        List list = packageManager.queryIntentActivities(intent,
+                PackageManager.MATCH_DEFAULT_ONLY);
+
+        return list.size() > 0;
+    }
+
+    public boolean isIntentAvailable(Context context, String action) {
+        final PackageManager packageManager = context.getPackageManager();
+        final Intent intent = new Intent(action);
+        List resolveInfo =
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (resolveInfo.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    static class ViewHolder {
+        TextView title;
+        TextView artist;
+        TextView duration;
+        TextView ready2play;
+        ImageView thumb_image;
+        ImageView setting_item;
+        LinearLayout dataLL;
+        LinearLayout dataLL_save;
+        ImageView ImageView_item_cancel;
+        ImageView ImageView_item_preview;
+        ImageView ImageView_item_download;
+        ImageView ImageView_item_favor;
+        TextView item_favor;
+
+    }
+
+    public class positionArrList {
+
+        ArrayList<HashMap<String, String>> arraylist;
+
+        public positionArrList() {
+            arraylist = new ArrayList<HashMap<String, String>>();
+        }
+
+        public void addPostion(int position, String status) {
+            Log.e("addPostion", showpos + "");
+            HashMap<String, String> temp = new HashMap<String, String>();
+            temp.put("position", position + "");
+            temp.put("status", status);
+            arraylist.add(temp);
+        }
+
+        public void removePosition(int position) {
+            Log.e("removePosition", showpos + "");
+            //  linkedList.remove("" + position);
+
+            for (int i = 0; i < arraylist.size(); i++) {
+                if (arraylist.get(i).get("position").equals(position + "")) {
+                    arraylist.remove(i);
+                }
+            }
+
+
+        }
+
+        public boolean searchPosition(int position) {
+            boolean x = false;
+            for (int i = 0; i < arraylist.size(); i++) {
+
+                if (arraylist.get(i).get("position").equals("" + position)) {
+                    x = true;
+                    break;
+                }
+            }
+            return x;
+        }
+
+    }
+
+    public class positionList {
+        LinkedList<String> linkedList;
+
+
+        public positionList() {
+            linkedList = new LinkedList<String>();
+        }
+
+        public void addPostion(int position) {
+            linkedList.add(position + "");
+        }
+
+        public void removePosition(int position) {
+            Log.e("removePosition", showpos + "");
+            linkedList.remove("" + position);
+        }
+
+        public boolean searchPosition(int position) {
+            boolean x = false;
+            for (int i = 0; i < linkedList.size(); i++) {
+                if (linkedList.get(i).equals("" + position)) {
+                    x = true;
+                    break;
+                }
+            }
+            return x;
+        }
+
+    }
+
+    public class YouTubePageStreamUriGetter extends
+            AsyncTask<String, String, String[]> {
+        int position;
+        TextView readytoplay;
+        LinearLayout save_layout;
+        String[] Gobalparam;
+        String filepath_to_sql;
+        String filename_to_sql;
+        String id;
+
+        public YouTubePageStreamUriGetter(int position, TextView readytoplay, LinearLayout save_layout, String id) {
+
+            this.position = position;
+            this.readytoplay = readytoplay;
+            this.save_layout = save_layout;
+            this.id = id;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+            // mProgressDialog.setMessage("Downloading\n"+mp3Lists.get(position).getTitle());
+            progressDialog2.setCancelable(false);
+            progressDialog2.setIndeterminate(false);
+            progressDialog2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog2.setMessage("Checking...");
+            progressDialog2.show();
+
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+            String url = params[0];
+            Gobalparam = params;
+            try {
+                ArrayList<Video> videos = getStreamingUrisFromYouTubePage(url);
+                if (videos != null && !videos.isEmpty()) {
+                    String retVidUrl = null;
+                    String type = "";
+                    String Quality = "";
+                    SharedPreferences settings = activity.getSharedPreferences("Youtube_downloader_tommy", 0);
+                    String Quality_User = settings.getString("Quality", "mq");
+                    Log.e("test", Quality_User);
+
+
+                    if (videos.size() > 0) {
+                        Collections.sort(videos, new Comparator<Video>() {
+                            int type_screen;
+
+                            @Override
+                            public int compare(Video video, Video video2) {
+                                return video.type_id.compareTo(video2.type_id);
+                            }
+
+                        });
+                    }
+                    for (Video video : videos) {
+                        Log.e("test", video.ext + "|" + video.type + "|" + video.url);
+                    }
+
+
+                    for (Video video : videos) {
+                        Log.e("test", video.type);
+                        if (video.ext.toLowerCase().contains("mp4") && video.type.toLowerCase().contains("high") && video.type.endsWith("1920x1080") && Quality_User.equals("fhq")) {
+                            Log.e("test", video.type.toLowerCase() + "|" + Quality_User);
+                            retVidUrl = video.url;
+                            type = ".mp4";
+                            Quality = "Full HD Quality";
+                            break;
+                        }
+
+                        if (video.ext.toLowerCase().contains("mp4") && video.type.toLowerCase().contains("high") && video.type.endsWith("1280x720") && (Quality_User.equals("hq") || Quality_User.equals("fhq"))) {
+                            Log.e("test", video.type.toLowerCase() + "|" + Quality_User);
+                            retVidUrl = video.url;
+                            type = ".mp4";
+                            Quality = "HD Quality";
+                            break;
+                        }
+
+                        if (video.ext.toLowerCase().contains("mp4") && video.type.toLowerCase().contains("medium") && (Quality_User.equals("mq") || Quality_User.equals("hq") || Quality_User.equals("fhq"))) {
+                            Log.e("test", video.type.toLowerCase() + "|" + Quality_User);
+                            retVidUrl = video.url;
+                            type = ".mp4";
+                            Quality = "Medium Quality";
+                            break;
+                        }
+                    }
+                    if (retVidUrl == null) {
+                        for (Video video : videos) {
+                            if (video.ext.toLowerCase().contains("3gp")
+                                    && video.type.toLowerCase().contains(
+                                    "medium") && (Quality_User.equals("lq") || Quality_User.equals("mq") || Quality_User.equals("hq") || Quality_User.equals("fhq"))) {
+                                Log.e("test", video.type.toLowerCase() + "|" + Quality_User);
+                                retVidUrl = video.url;
+                                type = ".3gp";
+                                Quality = "Low Quality";
+                                break;
+
+                            }
+                        }
+                    }
+                    if (retVidUrl == null) {
+
+                        for (Video video : videos) {
+                            if (video.ext.toLowerCase().contains("mp4")
+                                    && video.type.toLowerCase().contains("low") && (Quality_User.equals("lq") || Quality_User.equals("mq") || Quality_User.equals("hq") || Quality_User.equals("fhq"))) {
+                                Log.e("test", video.type.toLowerCase() + "|" + Quality_User);
+                                retVidUrl = video.url;
+                                type = ".mp4";
+                                Quality = "Low Quality";
+                                break;
+
+                            }
+                        }
+                    }
+                    if (retVidUrl == null) {
+                        for (Video video : videos) {
+                            if (video.ext.toLowerCase().contains("3gp")
+                                    && video.type.toLowerCase().contains("low") && (Quality_User.equals("lq") || Quality_User.equals("mq") || Quality_User.equals("hq") || Quality_User.equals("fhq"))) {
+                                Log.e("test", video.type.toLowerCase() + "|" + Quality_User);
+                                retVidUrl = video.url;
+                                type = ".3gp";
+                                Quality = "Low Quality";
+                                break;
+                            }
+                        }
+                    }
+
+                    URL myUrl = new URL(retVidUrl);
+                    URLConnection urlConnection = myUrl.openConnection();
+                    urlConnection.connect();
+                    int file_size = urlConnection.getContentLength();
+
+                    return new String[]{retVidUrl, params[1], type, Quality, file_size + ""};
+                }
+            } catch (Exception e) {
+                Log.e("test", "Couldn't get YouTube streaming URL", e);
+                return new String[]{"null", "null", "null", "null", "null"};
+            }
+            Log.e("test", "Couldn't get stream URI for " + url);
+            return new String[]{"null", "null", "null", "null", "null"};
+            //  return null;
+        }
+
+        @Override
+        protected void onPostExecute(String streamingUrl[]) {
+            super.onPostExecute(streamingUrl);
+            if (!streamingUrl[0].equals("null")) {
+                if (streamingUrl != null) {
+                    Log.e("test", streamingUrl[3] + ":[" + streamingUrl[2] + "]:" + streamingUrl[1] + ":" + streamingUrl[0]);
+                    String filename = streamingUrl[1].replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + streamingUrl[2];
+                    filepath_to_sql = Environment.getExternalStorageDirectory() + "/download/" + filename;
+                    filename_to_sql = filename;
+
+
+                    DBClass dbClass = new DBClass(activity);
+                    dbClass.InsertData(filepath_to_sql, filename_to_sql, "start_download", streamingUrl[4]);
+                    SharedPreferences settings = activity.getSharedPreferences("Youtube_downloader_tommy", 0);
+
+                    if (settings.getBoolean("DownloadManager", false)) {
+                        dm = (DownloadManager) activity.getSystemService(activity.getApplicationContext().DOWNLOAD_SERVICE);
+                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(streamingUrl[0]));
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                                .setAllowedOverRoaming(false)
+                                .setTitle(filename)
+                                .setDescription("")
+                                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+                        enqueue = dm.enqueue(request);
+
+                        progressDialog2.dismiss();
+                        progressDialog.setMessage("Downloading...\n" + filename);
+                        progressDialog.show();
+                    } else {
+                        progressDialog2.dismiss();
+                        // updateData(streamingUrl[0], streamingUrl[1],streamingUrl[2]);
+                        new DownloadFileAsync(streamingUrl[0], streamingUrl[1], streamingUrl[2], id).execute(new String[]{streamingUrl[0],});
+                    }
+                    //  progressDialog.setCancelable(false);
+                    //  progressDialog.setIndeterminate(false);
+                    //  progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+
+                }
+            } else {
+                if (count_retry >= 5) {
+                    progressDialog2.dismiss();
+                    new AlertUIHelper(activity).show("Can't get video.", Gravity.CENTER);
+                    count_retry = 0;
+                } else {
+                    ++count_retry;
+                    new YouTubePageStreamUriGetter(position, readytoplay, save_layout, id).execute(Gobalparam);
+                }
+
+
+            }
+
+        }
+
+        public ArrayList<Video> getStreamingUrisFromYouTubePage(String ytUrl)
+                throws IOException {
+            if (ytUrl == null) {
+                return null;
+            }
+
+            // Remove any query params in query string after the watch?v=<vid> in
+            // e.g.
+            // http://www.youtube.com/watch?v=0RUPACpf8Vs&feature=youtube_gdata_player
+            int andIdx = ytUrl.indexOf('&');
+            if (andIdx >= 0) {
+                ytUrl = ytUrl.substring(0, andIdx);
+            }
+
+            // Get the HTML response
+            String userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:8.0.1)";
+            HttpClient client = new DefaultHttpClient();
+            client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
+                    userAgent);
+            HttpGet request = new HttpGet(ytUrl);
+            HttpResponse response = client.execute(request);
+            String html = "";
+            InputStream in = response.getEntity().getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder str = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                str.append(line.replace("\\u0026", "&"));
+            }
+            in.close();
+            html = str.toString();
+
+            // Parse the HTML response and extract the streaming URIs
+            if (html.contains("verify-age-thumb")) {
+                Log.e("test", "YouTube is asking for age verification. We can't handle that sorry.");
+                return null;
+            }
+
+            if (html.contains("das_captcha")) {
+                Log.e("test", "Captcha found, please try with different IP address.");
+                return null;
+            }
+
+            Pattern p = Pattern.compile("stream_map\": \"(.*?)?\"");
+            // Pattern p = Pattern.compile("/stream_map=(.[^&]*?)\"/");
+            Matcher m = p.matcher(html);
+            List<String> matches = new ArrayList<String>();
+            while (m.find()) {
+                matches.add(m.group());
+            }
+
+            if (matches.size() != 1) {
+                // progressDialog.dismiss();
+                //  cancel(true);
+                Log.e("test", "Found zero or too many stream maps.");
+                return null;
+            }
+
+            String urls[] = matches.get(0).split(",");
+            HashMap<String, String> foundArray = new HashMap<String, String>();
+            for (String ppUrl : urls) {
+                String url = URLDecoder.decode(ppUrl, "UTF-8");
+
+                Pattern p1 = Pattern.compile("itag=([0-9]+?)[&]");
+                Matcher m1 = p1.matcher(url);
+                String itag = null;
+                if (m1.find()) {
+                    itag = m1.group(1);
+                }
+
+                Pattern p2 = Pattern.compile("sig=(.*?)[&]");
+                Matcher m2 = p2.matcher(url);
+                String sig = null;
+                if (m2.find()) {
+                    sig = m2.group(1);
+                }
+
+                Pattern p3 = Pattern.compile("url=(.*?)[&]");
+                Matcher m3 = p3.matcher(ppUrl);
+                String um = null;
+                if (m3.find()) {
+                    um = m3.group(1);
+                }
+
+                if (itag != null && sig != null && um != null) {
+                    foundArray.put(itag, URLDecoder.decode(um, "UTF-8") + "&"
+                            + "signature=" + sig);
+                }
+            }
+
+            if (foundArray.size() == 0) {
+                Log.e("test", "Couldn't find any URLs and corresponding signatures");
+                return null;
+            }
+
+            HashMap<String, Meta> typeMap = new HashMap<String, Meta>();
+            typeMap.put("13", new Meta("13", "3GP", "Low Quality - 176x144", "n"));
+            typeMap.put("17", new Meta("17", "3GP", "Medium Quality - 176x144", "m"));
+            typeMap.put("36", new Meta("36", "3GP", "High Quality - 320x240", "l"));
+            typeMap.put("5", new Meta("5", "FLV", "Low Quality - 400x226", "k"));
+            typeMap.put("6", new Meta("6", "FLV", "Medium Quality - 640x360", "j"));
+            typeMap.put("34", new Meta("34", "FLV", "Medium Quality - 640x360", "i"));
+            typeMap.put("35", new Meta("35", "FLV", "High Quality - 854x480", "h"));
+            typeMap.put("43", new Meta("43", "WEBM", "Low Quality - 640x360", "g"));
+            typeMap.put("44", new Meta("44", "WEBM", "Medium Quality - 854x480", "f"));
+            typeMap.put("45", new Meta("45", "WEBM", "High Quality - 1280x720", "e"));
+            typeMap.put("18", new Meta("18", "MP4", "Medium Quality - 480x360", "d"));
+            typeMap.put("22", new Meta("22", "MP4", "High Quality - 1280x720", "c"));
+            typeMap.put("37", new Meta("37", "MP4", "High Quality - 1920x1080", "b"));
+            typeMap.put("33", new Meta("38", "MP4", "High Quality - 4096x230", "a"));
+
+            ArrayList<Video> videos = new ArrayList<Video>();
+
+            for (String format : typeMap.keySet()) {
+                Meta meta = typeMap.get(format);
+
+                if (foundArray.containsKey(format)) {
+                    Video newVideo = new Video(meta.ext, meta.type, foundArray.get(format), meta.type_id);
+                    videos.add(newVideo);
+                    // Log.e("test", "YouTube Video streaming details: ext:" + newVideo.ext
+                    //         + ", type:" + newVideo.type + ", url:" + newVideo.url);
+                }
+            }
+
+            return videos;
+        }
+
+
+    }
+
+
+//    public void updateData(String url,final String name,final String type){
+//
+//        final String file_url = url;
+//    	/* Define and configure the progress dialog */
+//        final ProgressDialog myProgress = new ProgressDialog(activity);
+//        myProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        myProgress.setMessage(name);
+//        myProgress.setTitle("Downloading...");
+//        myProgress.setCancelable(false);
+//        /* Show the progress dialog. */
+//        myProgress.show();
+//        new Thread(new Runnable(){
+//
+//            public void run(){
+//             //   try {
+//
+//                    //create the new connection
+//
+////                    Log.e("test",file_url);
+////
+////                    URL url = new URL(file_url);
+////                    URLConnection  urlConnection = url.openConnection();
+////                    urlConnection.connect();
+//
+//                    File SDCardRoot =new File(Environment.getExternalStorageDirectory()+"/download/");
+//                    SDCardRoot.mkdirs();
+//                    //create a new file, specifying the path, and the filename
+//                    //which we want to save the file as.
+//                    File file = new File(SDCardRoot,name+type);
+//
+////                    //this will be used to write the downloaded data into the file we created
+////                    FileOutputStream fileOutput = new FileOutputStream(file);
+////
+////                    //this will be used in reading the data from the internet
+////                    InputStream inputStream = urlConnection.getInputStream();
+////
+////                    //this is the total size of the file
+////                    int totalSize = urlConnection.getContentLength();
+////                    myProgress.setMax(totalSize);
+////                    //variable to store total downloaded bytes
+////                    int downloadedSize = 0;
+////
+////                    //create a buffer...
+////                    byte[] buffer = new byte[1024];
+////                    int bufferLength = 0; //used to store a temporary size of the buffer
+////                    int progress = 0;
+////                    //now, read through the input buffer and write the contents to the file
+////                    while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+////                        //add the data in the buffer to the file in the file output stream (the file on the sd card
+////                        fileOutput.write(buffer, 0, bufferLength);
+////                        //add up the size so we know how much is downloaded
+////                        downloadedSize += bufferLength;
+////                        //Here we update the progress
+////                        progress = downloadedSize;
+////                        myProgress.setProgress(progress);
+////                    }   fileOutput.close();
+////                    myProgress.dismiss();
+////                    //catch some possible errors...
+////                } catch (MalformedURLException e) {
+////                    e.printStackTrace();
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////               }
+//
+//                int count;
+//
+//                try {
+//                    URL url = new URL(file_url);
+//                    URLConnection conexion = url.openConnection();
+//                    conexion.connect();
+//
+//                    int lenghtOfFile = conexion.getContentLength();
+//                    myProgress.setMax(lenghtOfFile);
+//
+//                    Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
+//
+//                    InputStream input = new BufferedInputStream(url.openStream());
+//                    OutputStream output = new FileOutputStream(file);
+//
+//                    byte data[] = new byte[1024];
+//
+//                    long total = 0;
+//
+//                    while ((count = input.read(data)) != -1) {
+//                        total += count;
+//                        myProgress.setProgress((int)(total));
+//
+//                       // publishProgress(""+(int)((total*100)/lenghtOfFile));
+//                        output.write(data, 0, count);
+//                    }
+//
+//                    output.flush();
+//                    output.close();
+//                    input.close();
+//                } catch (Exception e) {}
+//
+//
+//
+//
+//            }
+//        }).start();
+//
+//    }
+
+    class DownloadFileAsync extends AsyncTask<String, String, Boolean> {
+        String name = "";
+        String type = "";
+        ProgressDialog myProgress;
+        String id;
+
+        DownloadFileAsync(String url, String name, String type, String id) {
+            this.name = name;
+            this.type = type;
+            this.id = id;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            myProgress = new ProgressDialog(activity);
+            myProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            myProgress.setMessage(name);
+            myProgress.setTitle("Downloading...");
+            myProgress.setCancelable(false);
+            LayoutInflater layoutInflater = myProgress.getLayoutInflater();
+            myProgress.setProgressDrawable(activity.getResources().getDrawable(R.drawable.progressbar));
+        /* Show the progress dialog. */
+            myProgress.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... aurl) {
+            int count;
+
+            try {
+                URL url = new URL(aurl[0]);
+                URLConnection conexion = url.openConnection();
+                conexion.setConnectTimeout(60000);
+                conexion.connect();
+
+                int lenghtOfFile = conexion.getContentLength();
+
+                myProgress.setMax(lenghtOfFile);
+
+                // Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
+                File SDCardRoot = new File(Environment.getExternalStorageDirectory() + "/download/");
+                SDCardRoot.mkdirs();
+                //create a new file, specifying the path, and the filename
+                //which we want to save the file as.
+                File file = new File(SDCardRoot, name.replace("\"", "").replace("<", "").replace(">", "").replace("|", "").replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "") + type);
+
+                InputStream input = new BufferedInputStream(url.openStream());
+                OutputStream output = new FileOutputStream(file);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress("" + (int) ((total)));
+                    output.write(data, 0, count);
+                }
+
+
+
+
+                output.flush();
+                output.close();
+                input.close();
+
+//                MusicMetadataSet src_set = null;
+//                try {src_set = new MyID3().read(file);} catch (IOException e1) {}
+//                if (src_set == null) // perhaps no metadata
+//                {
+//                    Log.i("NULL", "NULL");
+//                } else
+//                {
+//                    try{
+//                        IMusicMetadata metadata = src_set.getSimplified();
+//                        String artist = metadata.getArtist();
+//                        String album = metadata.getAlbum();
+//                        String song_title = metadata.getSongTitle();
+//                        Number track_number = metadata.getTrackNumber();
+//                        Log.i("artist", artist);
+//                        Log.i("album", album);
+//                    }catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    File dst = file;
+//                    MusicMetadata meta = new MusicMetadata("name");
+//                    meta.setSongTitle(name);
+//                    //meta.setArtist("CS");
+//                    try {
+//                        new MyID3().write(file, dst, src_set, meta);
+//                    } catch (UnsupportedEncodingException e) {
+//
+//                    } catch (ID3WriteException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }  // write updated metadata
+//                }
+
+
+//                String pathF=Environment.getExternalStorageDirectory() + "/Android/data/" + activity.getClass().getPackage().getName() + "/imagesHD";
+//                new File(pathF).mkdirs();
+//                String ImagesHD=Environment.getExternalStorageDirectory() + "/Android/data/" + activity.getClass().getPackage().getName() + "/imagesHD" + id+".png";
+//                File file1_ImagesHD=new File(ImagesHD);
+//                if(!file1_ImagesHD.exists()){
+//                Bitmap bmThumbnail = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+//                File fileHD = new File(pathF,id+".png");
+//                try {
+//                    FileOutputStream out = new FileOutputStream(fileHD);
+//                    bmThumbnail.compress(Bitmap.CompressFormat.PNG, 90, out);
+//                    out.flush();
+//                    out.close();
+//                    System.gc();
+//                } catch (Exception e) {
+                //                Log.e("ERROR","ERROR",e);
+                //           }
+                //     }
+                return true;
+            } catch (Exception e) {
+                Log.e("Download", "ERROR", e);
+                return false;
+            }
+
+
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            //Log.d("ANDRO_ASYNC",progress[0]);
+            myProgress.setProgress(Integer.parseInt(progress[0]));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean unused) {
+            myProgress.dismiss();
+            if (unused) {
+                notifyDataSetChanged();
+            } else {
+                new AlertUIHelper(activity).show("Can't download.", Gravity.CENTER);
+            }
+
+        }
+    }
+
+
+}
